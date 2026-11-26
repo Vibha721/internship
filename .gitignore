@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.streamlit/secrets.toml
+*.sqlite3
+*.db
+.DS_Store
+
+# macOS metadata files
+._*
+# Local environment files
+.env
+.env.*
+!.env.example
