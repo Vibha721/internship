@@ -26,6 +26,21 @@ streamlit run app.py
 
 Open the local URL printed by Streamlit. The app runs locally; uploaded study inputs are processed in the current Streamlit session and are not written to a project database.
 
+## Use offline on another laptop
+
+The hosted Streamlit URL requires internet access. To use the app offline, download a standalone package on an internet-connected computer and transfer it to the target laptop. The package includes Python and the app dependencies, so the target laptop does not need Python or internet access.
+
+After pushing these changes to the `main` branch, GitHub Actions builds the offline packages. You can also run the **Build offline app bundles** workflow manually from the Actions tab. Download the artifact matching the laptop; build artifacts are retained for 30 days:
+
+- `cytotoxicity-offline-windows-x86_64` for 64-bit Windows
+- `cytotoxicity-offline-macos-arm64` for Apple silicon Macs
+- `cytotoxicity-offline-macos-x86_64` for Intel Macs
+- `cytotoxicity-offline-linux-x86_64` for 64-bit Intel/AMD Linux
+
+Extract the zip and launch the included Start script. The app opens in your browser at a local `127.0.0.1` address and only listens on the laptop. Keep its terminal window open while using it. macOS packages are unsigned and may require Control-click > Open the first time. Linux packages are built on Ubuntu 22.04 and need glibc 2.35 or newer.
+
+The supplied templates and Word document generation work offline. Page-accurate PDF previews and conversion of legacy or uploaded templates require LibreOffice to be installed separately. The offline package workflow creates separate artifacts for Windows, Linux, Apple silicon Macs, and Intel Macs.
+
 ## Workflow
 
 1. Select the supplied DCA study plan, standard study plan, supplied study report, or upload a compatible Word plan template. Other legacy `.doc` files require LibreOffice for conversion. The chosen template is retained for the current session; use **Change template** to return to the selection page.

@@ -2,6 +2,8 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
+/build/
+/dist/
 .streamlit/secrets.toml
 *.sqlite3
 *.db

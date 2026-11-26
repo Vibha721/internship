@@ -1,0 +1,47 @@
+name: Build offline app bundles
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-22.04
+            platform: linux-x86_64
+          - os: windows-2022
+            platform: windows-x86_64
+          - os: macos-15
+            platform: macos-arm64
+          - os: macos-15-intel
+            platform: macos-x86_64
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install app and packaging dependencies
+        run: python -m pip install -r requirements.txt -r packaging/requirements-build.txt
+      - name: Build standalone app
+        run: python -m PyInstaller --noconfirm --clean --distpath dist --workpath build packaging/offline_app.spec
+      - name: Smoke-test standalone app
+        run: python packaging/smoke_test.py --app-dir dist/CytotoxicityStudyApp
+      - name: Package offline app
+        run: python packaging/package_offline.py --platform "${{ matrix.platform }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cytotoxicity-offline-${{ matrix.platform }}
+          path: dist/cytotoxicity-offline-${{ matrix.platform }}.zip
+          if-no-files-found: error
+          retention-days: 30
